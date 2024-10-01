@@ -1,0 +1,123 @@
+//find Maximum of three numbers
+import java.util.Scanner;
+
+public class MaxOfThree {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.print("Enter three numbers: ");
+        int num1 = scanner.nextInt();
+        int num2 = scanner.nextInt();
+        int num3 = scanner.nextInt();
+
+        int max = num1; // Assume num1 is the maximum
+        
+        if (num2 > max) {
+            max = num2;
+        }
+        if (num3 > max) {
+            max = num3;
+        }
+        
+        System.out.println("Maximum of three numbers is: " + max);
+    }
+}
+/*OUTPUT:
+Enter three numbers: 23
+14
+67*/
+
+//Check whether a number is Prime or not
+
+import java.util.Scanner;
+
+public class PrimeCheck {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.print("Enter a number: ");
+        int number = scanner.nextInt();
+        boolean isPrime = true;
+
+        if (number <= 1) {
+            isPrime = false;
+        } else {
+            for (int i = 2; i <= Math.sqrt(number); i++) {
+                if (number % i == 0) {
+                    isPrime = false;
+                    break;
+                }
+            }
+        }
+        
+        if (isPrime) {
+            System.out.println(number + " is a prime number.");
+        } else {
+            System.out.println(number + " is not a prime number.");
+        }
+    }
+}
+/*
+Enter a number: 56798
+56798 is not a prime number.
+*/
+
+
+//Factorial of number
+
+import java.util.Scanner;
+
+public class Factorial {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.print("Enter a non-negative integer: ");
+        int number = scanner.nextInt();
+        long factorial = 1;
+
+        for (int i = 1; i <= number; i++) {
+            factorial *= i;
+        }
+        
+        System.out.println("Factorial of " + number + " is: " + factorial);
+    }
+}
+/*
+Enter a non-negative integer: 56
+Factorial of 56 is: 6908521828386340864
+*/
+
+
+
+//Fibonacci Series
+
+import java.util.Scanner;
+
+public class Fibonacci {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.print("Enter the number of terms in the Fibonacci series: ");
+        int terms = scanner.nextInt();
+        
+        // Input validation
+        if (terms < 0) {
+            System.out.println("Please enter a non-negative integer.");
+            return; // Exit the program
+        }
+        
+        int a = 0, b = 1;
+        
+        System.out.print("Fibonacci Series: ");
+        for (int i = 1; i <= terms; i++) {
+            System.out.print(a + " ");
+            int next = a + b;
+            a = b;
+            b = next;
+        }
+        
+        System.out.println(); // New line for better output formatting
+        scanner.close(); // Close the scanner
+    }
+}
+
