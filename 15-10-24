@@ -1,0 +1,158 @@
+1. Develop a Java program to create a class Student with members usn, name, an array
+credits and an array marks. Include methods to accept and display details and a
+method to calculate SGPA &amp; CGPA of a student.
+NOTE: Add Semester 1 &amp; Semester 2 marks of all subjects and compute SGPA and
+CGPA
+
+CODE>>
+
+import java.util.Scanner;
+
+class Student {
+    String usn;
+    String name;
+    int[] credits;
+    int[] marks;
+
+    Student(String usn, String name, int[] credits, int[] marks) {
+        this.usn = usn;
+        this.name = name;
+        this.credits = credits;
+        this.marks = marks;
+    }
+
+    void displayDetails() {
+        System.out.println("USN: " + usn);
+        System.out.println("Name: " + name);
+        for (int i = 0; i < credits.length; i++) {
+            System.out.println("Subject " + (i + 1) + " - Credits: " + credits[i] + ", Marks: " + marks[i]);
+        }
+    }
+
+    double calculateSGPA() {
+        int totalCredits = 0;
+        int totalPoints = 0;
+        for (int i = 0; i < credits.length; i++) {
+            totalCredits += credits[i];
+            totalPoints += marks[i] * credits[i];
+        }
+        return (double) totalPoints / totalCredits;
+    }
+
+    double calculateCGPA(double[] sGPAs) {
+        double totalSGPA = 0;
+        for (double sgpa : sGPAs) {
+            totalSGPA += sgpa;
+        }
+        return totalSGPA / sGPAs.length;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter USN: ");
+        String usn = sc.nextLine();
+        System.out.print("Enter Name: ");
+        String name = sc.nextLine();
+        int[] credits = {4, 3, 3, 4};
+        int[] marks = new int[credits.length];
+        System.out.println("Enter marks for 4 subjects:");
+        for (int i = 0; i < marks.length; i++) {
+            marks[i] = sc.nextInt();
+        }
+        Student student = new Student(usn, name, credits, marks);
+        student.displayDetails();
+        double sgpa1 = student.calculateSGPA();
+        System.out.println("SGPA: " + sgpa1);
+        double[] sGPAs = {sgpa1, sgpa1}; // Sample CGPA calculation with two semesters having the same SGPA
+        System.out.println("CGPA: " + student.calculateCGPA(sGPAs));
+    }
+}
+/* OUTPUT
+Enter USN: 1WA23CS052
+Enter Name: RACHITHA REDDY
+Enter marks for 4 subjects:
+97
+56
+98 
+99
+USN: 1WA23CS052
+Name: RACHITHA REDDY
+Subject 1 - Credits: 4, Marks: 97
+Subject 2 - Credits: 3, Marks: 56
+Subject 3 - Credits: 3, Marks: 98
+Subject 4 - Credits: 4, Marks: 99
+SGPA: 89.0
+CGPA: 89.0
+*/
+
+2. Create a class Book which contains four members: name, author, price, num_pages. Include a
+constructor to set the values for the members. Include methods to set and get the details of the
+objects. Display the complete details of the book. Develop a Java program to create n book
+objects.
+NOTE: 1: Use normal display method
+2: Use Override toString method
+Eg: public String toString() {Write code to display data }
+
+CODE>>
+
+class Book {
+    String name;
+    String author;
+    double price;
+    int numPages;
+
+    Book(String name, String author, double price, int numPages) {
+        this.name = name;
+        this.author = author;
+        this.price = price;
+        this.numPages = numPages;
+    }
+
+    void setDetails(String name, String author, double price, int numPages) {
+        this.name = name;
+        this.author = author;
+        this.price = price;
+        this.numPages = numPages;
+    }
+
+    void getDetails() {
+        System.out.println("Name: " + name);
+        System.out.println("Author: " + author);
+        System.out.println("Price: " + price);
+        System.out.println("Number of Pages: " + numPages);
+    }
+
+    @Override
+    public String toString() {
+        return "Name: " + name + ", Author: " + author + ", Price: " + price + ", Number of Pages: " + numPages;
+    }
+
+    public static void main(String[] args) {
+        Book book1 = new Book("Java Programming", "James Gosling", 499.99, 450);
+        Book book2 = new Book("Effective Java", "Joshua Bloch", 799.99, 400);
+        book1.getDetails();
+        System.out.println(book2);
+    }
+}
+/* OUTPUT:
+Enter details for the first book:
+Name: Java programming
+Author: James Gosling
+Price: 499.99
+Number of Pages: 450
+Enter details for the second book:
+Name: Effective Java
+Author: Joshua Bloch 
+Price: 799.99
+Number of Pages: 400
+Name: Java programming
+Author: James Gosling
+Price: 499.99
+Number of Pages: 450
+Name: Effective Java
+Author: Joshua Bloch
+Price: 799.99
+Number of Pages: 400
+Name: Java programming, Author: James Gosling, Price: 499.99, Number of Pages: 450
+Name: Effective Java, Author: Joshua Bloch, Price: 799.99, Number of Pages: 400
+*/
