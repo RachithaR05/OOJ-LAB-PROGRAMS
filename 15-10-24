@@ -1,158 +1,277 @@
-1. Develop a Java program to create a class Student with members usn, name, an array
-credits and an array marks. Include methods to accept and display details and a
-method to calculate SGPA &amp; CGPA of a student.
-NOTE: Add Semester 1 &amp; Semester 2 marks of all subjects and compute SGPA and
-CGPA
+1. Develop a Java program to create a class Student with members usn, name, an array credits and an array marks. Include methods to accept and display details and a method to calculate SGPA & CGPA of a student.
+NOTE: Add Semester 1 & Semester 2 marks of all subjects and compute SGPA and CGPA
 
 CODE>>
-
 import java.util.Scanner;
 
 class Student {
-    String usn;
-    String name;
-    int[] credits;
-    int[] marks;
+    String usn, name;
+    int[][] credits;  // 2D array to store credits for multiple semesters
+    int[][] marks;    // 2D array to store marks for multiple semesters
+    double[] sgpa;    // Array to store SGPA for each semester
+    double cgpa;
+    int semesters;    // Total number of semesters
 
-    Student(String usn, String name, int[] credits, int[] marks) {
-        this.usn = usn;
-        this.name = name;
-        this.credits = credits;
-        this.marks = marks;
-    }
+    // Constructor to initialize arrays based on the number of semesters
+    public Student(int semesters) {
+        this.semesters = semesters;
+        credits = new int[semesters][6];  // Assuming 6 subjects per semester
+        marks = new int[semesters][6];
+        sgpa = new double[semesters];
+    }
 
-    void displayDetails() {
-        System.out.println("USN: " + usn);
-        System.out.println("Name: " + name);
-        for (int i = 0; i < credits.length; i++) {
-            System.out.println("Subject " + (i + 1) + " - Credits: " + credits[i] + ", Marks: " + marks[i]);
-        }
-    }
+    // Method to accept details
+    void acceptDetails() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter USN: ");
+        usn = sc.nextLine();
+        System.out.println("Enter Name: ");
+        name = sc.nextLine();
 
-    double calculateSGPA() {
-        int totalCredits = 0;
-        int totalPoints = 0;
-        for (int i = 0; i < credits.length; i++) {
-            totalCredits += credits[i];
-            totalPoints += marks[i] * credits[i];
-        }
-        return (double) totalPoints / totalCredits;
-    }
+        for (int sem = 0; sem < semesters; sem++) {
+            System.out.println("\nEnter details for Semester " + (sem + 1) + ":");
 
-    double calculateCGPA(double[] sGPAs) {
-        double totalSGPA = 0;
-        for (double sgpa : sGPAs) {
-            totalSGPA += sgpa;
-        }
-        return totalSGPA / sGPAs.length;
-    }
+            System.out.println("Enter credits for 6 subjects: ");
+            for (int i = 0; i < 6; i++) {
+                credits[sem][i] = sc.nextInt();
+            }
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        System.out.print("Enter USN: ");
-        String usn = sc.nextLine();
-        System.out.print("Enter Name: ");
-        String name = sc.nextLine();
-        int[] credits = {4, 3, 3, 4};
-        int[] marks = new int[credits.length];
-        System.out.println("Enter marks for 4 subjects:");
-        for (int i = 0; i < marks.length; i++) {
-            marks[i] = sc.nextInt();
-        }
-        Student student = new Student(usn, name, credits, marks);
-        student.displayDetails();
-        double sgpa1 = student.calculateSGPA();
-        System.out.println("SGPA: " + sgpa1);
-        double[] sGPAs = {sgpa1, sgpa1}; // Sample CGPA calculation with two semesters having the same SGPA
-        System.out.println("CGPA: " + student.calculateCGPA(sGPAs));
-    }
+            System.out.println("Enter marks for 6 subjects: ");
+            for (int i = 0; i < 6; i++) {
+                marks[sem][i] = sc.nextInt();
+            }
+        }
+    }
+
+    // Method to display details
+    void displayDetails() {
+        System.out.println("USN: " + usn);
+        System.out.println("Name: " + name);
+
+        for (int sem = 0; sem < semesters; sem++) {
+            System.out.println("\nDetails for Semester " + (sem + 1) + ":");
+            System.out.print("Credits: ");
+            for (int credit : credits[sem]) {
+                System.out.print(credit + " ");
+            }
+            System.out.println();
+
+            System.out.print("Marks: ");
+            for (int mark : marks[sem]) {
+                System.out.print(mark + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    // Method to calculate SGPA for a semester
+    double calculateSGPA(int[] marks, int[] credits) {
+        double totalPoints = 0;
+        int totalCredits = 0;
+        for (int i = 0; i < marks.length; i++) {
+            int gradePoints;
+            if (marks[i] >= 90) gradePoints = 10;
+            else if (marks[i] >= 80) gradePoints = 9;
+            else if (marks[i] >= 70) gradePoints = 8;
+            else if (marks[i] >= 60) gradePoints = 7;
+            else if (marks[i] >= 50) gradePoints = 6;
+            else gradePoints = 0;
+
+            totalPoints += gradePoints * credits[i];
+            totalCredits += credits[i];
+        }
+        return totalPoints / totalCredits;
+    }
+
+    // Method to calculate CGPA (based on multiple semesters)
+    void calculateCGPA() {
+        double totalSGPA = 0;
+
+        for (int sem = 0; sem < semesters; sem++) {
+            sgpa[sem] = calculateSGPA(marks[sem], credits[sem]);
+            totalSGPA += sgpa[sem];
+            System.out.println("SGPA for Semester " + (sem + 1) + ": " + sgpa[sem]);
+        }
+
+        cgpa = totalSGPA / semesters;
+        System.out.println("\nCGPA: " + cgpa);
+    }
 }
-/* OUTPUT
-Enter USN: 1WA23CS052
-Enter Name: RACHITHA REDDY
-Enter marks for 4 subjects:
-97
-56
-98 
-99
+
+public class StudentMain {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter number of semesters: ");
+        int semesters = sc.nextInt();
+
+        Student s = new Student(semesters);
+        s.acceptDetails();
+        s.displayDetails();
+        s.calculateCGPA();
+    }
+}
+
+/* Enter number of semesters: 2
+Enter USN: 
+1WA23CS052
+Enter Name: 
+RACHITHA REDDY
+
+Enter details for Semester 1:
+Enter credits for 6 subjects: 
+4 3 4 3 3 4
+Enter marks for 6 subjects: 
+85 92 70 65 90 75
+
+Enter details for Semester 2:
+Enter credits for 6 subjects: 
+4 3 4 3 3 4
+Enter marks for 6 subjects: 
+88 90 72 68 85 80
+
 USN: 1WA23CS052
 Name: RACHITHA REDDY
-Subject 1 - Credits: 4, Marks: 97
-Subject 2 - Credits: 3, Marks: 56
-Subject 3 - Credits: 3, Marks: 98
-Subject 4 - Credits: 4, Marks: 99
-SGPA: 89.0
-CGPA: 89.0
+
+Details for Semester 1:
+Credits: 4 3 4 3 3 4 
+Marks: 85 92 70 65 90 75 
+
+Details for Semester 2:
+Credits: 4 3 4 3 3 4 
+Marks: 88 90 72 68 85 80 
+
+SGPA for Semester 1: 8.5
+SGPA for Semester 2: 8.67
+
+CGPA: 8.585 
 */
 
-2. Create a class Book which contains four members: name, author, price, num_pages. Include a
-constructor to set the values for the members. Include methods to set and get the details of the
-objects. Display the complete details of the book. Develop a Java program to create n book
-objects.
+
+2. Create a class Book which contains four members: name, author, price, num_pages. Include a constructor to set the values for the members. Include methods to set and get the details of the objects. Display the complete details of the book. Develop a Java program to create n book objects.
 NOTE: 1: Use normal display method
 2: Use Override toString method
 Eg: public String toString() {Write code to display data }
 
-CODE>>
+Give output as well please
+
+
+import java.util.Scanner;
 
 class Book {
-    String name;
-    String author;
-    double price;
-    int numPages;
+    String name;
+    String author;
+    double price;
+    int num_pages;
 
-    Book(String name, String author, double price, int numPages) {
-        this.name = name;
-        this.author = author;
-        this.price = price;
-        this.numPages = numPages;
-    }
+    // Constructor to initialize book details
+    public Book(String name, String author, double price, int num_pages) {
+        this.name = name;
+        this.author = author;
+        this.price = price;
+        this.num_pages = num_pages;
+    }
 
-    void setDetails(String name, String author, double price, int numPages) {
-        this.name = name;
-        this.author = author;
-        this.price = price;
-        this.numPages = numPages;
-    }
+    // Method to set book details
+    public void setDetails(String name, String author, double price, int num_pages) {
+        this.name = name;
+        this.author = author;
+        this.price = price;
+        this.num_pages = num_pages;
+    }
 
-    void getDetails() {
-        System.out.println("Name: " + name);
-        System.out.println("Author: " + author);
-        System.out.println("Price: " + price);
-        System.out.println("Number of Pages: " + numPages);
-    }
+    // Method to get book details
+    public void getDetails() {
+        System.out.println("Book Name: " + name);
+        System.out.println("Author: " + author);
+        System.out.println("Price: " + price);
+        System.out.println("Number of Pages: " + num_pages);
+    }
 
-    @Override
-    public String toString() {
-        return "Name: " + name + ", Author: " + author + ", Price: " + price + ", Number of Pages: " + numPages;
-    }
-
-    public static void main(String[] args) {
-        Book book1 = new Book("Java Programming", "James Gosling", 499.99, 450);
-        Book book2 = new Book("Effective Java", "Joshua Bloch", 799.99, 400);
-        book1.getDetails();
-        System.out.println(book2);
-    }
+    // Override toString method to display book details
+    @Override
+    public String toString() {
+        return "Book Name: " + name + "\n" +
+               "Author: " + author + "\n" +
+               "Price: " + price + "\n" +
+               "Number of Pages: " + num_pages;
+    }
 }
-/* OUTPUT:
-Enter details for the first book:
-Name: Java programming
-Author: James Gosling
+
+public class BookMain {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter the number of books: ");
+        int n = sc.nextInt();
+        sc.nextLine(); // consume the newline
+        
+        Book[] books = new Book[n];
+
+        // Loop to accept book details and create Book objects
+        for (int i = 0; i < n; i++) {
+            System.out.println("Enter details for Book " + (i + 1) + ":");
+            System.out.print("Enter Name: ");
+            String name = sc.nextLine();
+            System.out.print("Enter Author: ");
+            String author = sc.nextLine();
+            System.out.print("Enter Price: ");
+            double price = sc.nextDouble();
+            System.out.print("Enter Number of Pages: ");
+            int num_pages = sc.nextInt();
+            sc.nextLine();  // consume the newline
+
+            books[i] = new Book(name, author, price, num_pages);
+        }
+
+        // Display details of all books using normal display method
+        System.out.println("\nBook Details (Normal Method): ");
+        for (Book book : books) {
+            book.getDetails();
+            System.out.println();
+        }
+
+        // Display details of all books using toString method
+        System.out.println("Book Details (Using toString Method): ");
+        for (Book book : books) {
+            System.out.println(book);
+            System.out.println();
+        }
+    }
+}
+
+/* Enter the number of books: 
+2
+Enter details for Book 1:
+Enter Name: Harry Potter
+Enter Author: J.K. Rowling
+Enter Price: 499.99
+Enter Number of Pages: 450
+Enter details for Book 2:
+Enter Name: The Hobbit
+Enter Author: J.R.R. Tolkien
+Enter Price: 349.99
+Enter Number of Pages: 300
+
+Book Details (Normal Method): 
+Book Name: Harry Potter
+Author: J.K. Rowling
 Price: 499.99
 Number of Pages: 450
-Enter details for the second book:
-Name: Effective Java
-Author: Joshua Bloch 
-Price: 799.99
-Number of Pages: 400
-Name: Java programming
-Author: James Gosling
+
+Book Name: The Hobbit
+Author: J.R.R. Tolkien
+Price: 349.99
+Number of Pages: 300
+
+Book Details (Using toString Method): 
+Book Name: Harry Potter
+Author: J.K. Rowling
 Price: 499.99
 Number of Pages: 450
-Name: Effective Java
-Author: Joshua Bloch
-Price: 799.99
-Number of Pages: 400
-Name: Java programming, Author: James Gosling, Price: 499.99, Number of Pages: 450
-Name: Effective Java, Author: Joshua Bloch, Price: 799.99, Number of Pages: 400
+
+Book Name: The Hobbit
+Author: J.R.R. Tolkien
+Price: 349.99
+Number of Pages: 300
 */
+
