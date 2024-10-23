@@ -1,0 +1,245 @@
+1. Java Banking System (with 15 customers, deposit, and withdrawal functionalities)
+
+import java.util.Scanner;
+
+class BankAccount {
+    private int accountNumber;
+    private String customerName;
+    private double balance;
+
+    public BankAccount(int accountNumber, String customerName, double balance) {
+        this.accountNumber = accountNumber;
+        this.customerName = customerName;
+        this.balance = balance;
+    }
+
+    public void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+            System.out.println("Successfully deposited $" + amount);
+        } else {
+            System.out.println("Invalid deposit amount!");
+        }
+    }
+
+    public void withdraw(double amount) {
+        if (amount > 0 && amount <= balance) {
+            balance -= amount;
+            System.out.println("Successfully withdrawn $" + amount);
+        } else {
+            System.out.println("Insufficient funds or invalid withdrawal amount!");
+        }
+    }
+
+    public void displayDetails() {
+        System.out.println("Account Number: " + accountNumber);
+        System.out.println("Customer Name: " + customerName);
+        System.out.println("Balance: $" + balance);
+    }
+}
+
+public class BankingSystem {
+    public static void main(String[] args) {
+        BankAccount[] customers = new BankAccount[15];
+        Scanner sc = new Scanner(System.in);
+        
+        // Initialize 15 customers
+        for (int i = 0; i < 15; i++) {
+            customers[i] = new BankAccount(i + 1001, "Customer " + (i + 1), 1000);
+        }
+        
+        // Perform operations for demonstration
+        customers[0].deposit(500);
+        customers[1].withdraw(200);
+        customers[2].withdraw(1500); // Invalid due to insufficient balance
+        
+        // Display account details for first 3 customers
+        for (int i = 0; i < 3; i++) {
+            customers[i].displayDetails();
+            System.out.println();
+        }
+        
+        sc.close();
+    }
+}
+
+2. Static Variables and Methods Example
+
+class Student {
+    int rollNo;
+    String name;
+    static String college = "XYZ College";  // Static variable
+
+    // Constructor
+    Student(int rollNo, String name) {
+        this.rollNo = rollNo;
+        this.name = name;
+    }
+
+    // Static method to change static variable
+    static void changeCollege(String newCollege) {
+        college = newCollege;
+    }
+
+    void display() {
+        System.out.println(rollNo + " " + name + " " + college);
+    }
+}
+
+public class StaticDemo {
+    public static void main(String[] args) {
+        Student.changeCollege("ABC University"); // Changing static variable
+
+        Student s1 = new Student(101, "John");
+        Student s2 = new Student(102, "Jane");
+
+        s1.display();
+        s2.display();
+    }
+}
+
+3. Inner Classes Example
+
+class OuterClass {
+    private String msg = "Hello from the Outer Class!";
+
+    class InnerClass {  // Inner class
+        void displayMessage() {
+            System.out.println("Message from Inner class: " + msg);
+        }
+    }
+}
+
+public class InnerClassDemo {
+    public static void main(String[] args) {
+        OuterClass outer = new OuterClass();  // Create an instance of the outer class
+        OuterClass.InnerClass inner = outer.new InnerClass();  // Create an instance of the inner class
+        inner.displayMessage();
+    }
+}
+
+4. Method and Constructor Overloading Example
+
+class OverloadDemo {
+    // Method overloading
+    void display(int a) {
+        System.out.println("Integer: " + a);
+    }
+
+    void display(String a) {
+        System.out.println("String: " + a);
+    }
+
+    // Constructor overloading
+    OverloadDemo() {
+        System.out.println("Default Constructor");
+    }
+
+    OverloadDemo(int a) {
+        System.out.println("Parameterized Constructor with int: " + a);
+    }
+}
+
+public class OverloadingDemo {
+    public static void main(String[] args) {
+        OverloadDemo obj1 = new OverloadDemo(); // Default constructor
+        OverloadDemo obj2 = new OverloadDemo(100); // Parameterized constructor
+
+        obj1.display(42);    // Calling method with int argument
+        obj1.display("Overloading"); // Calling method with String argument
+    }
+}
+
+5. Single Inheritance Example Using Box Class
+
+class Box {
+    double width;
+    double height;
+    double depth;
+
+    // Constructor for Box
+    Box(double width, double height, double depth) {
+        this.width = width;
+        this.height = height;
+        this.depth = depth;
+    }
+
+    // Method to calculate volume of the box
+    double volume() {
+        return width * height * depth;
+    }
+}
+
+// Single Inheritance: BoxWeight class extends Box class
+class BoxWeight extends Box {
+    double weight;
+
+    // Constructor for BoxWeight
+    BoxWeight(double width, double height, double depth, double weight) {
+        super(width, height, depth); // Call the parent class constructor
+        this.weight = weight;
+    }
+
+    void displayWeight() {
+        System.out.println("Weight of the box: " + weight);
+    }
+}
+
+public class SingleInheritanceDemo {
+    public static void main(String[] args) {
+        BoxWeight box = new BoxWeight(10, 20, 15, 25.5);
+        System.out.println("Volume of the box: " + box.volume());
+        box.displayWeight();
+    }
+}
+
+OUTPUTS 
+
+1. Banking System Output:
+
+For the first 3 customers (out of 15), after performing deposit and withdrawal operations:
+
+Successfully deposited $500.0
+Successfully withdrawn $200.0
+Insufficient funds or invalid withdrawal amount!
+Account Number: 1001
+Customer Name: Customer 1
+Balance: $1500.0
+
+Account Number: 1002
+Customer Name: Customer 2
+Balance: $800.0
+
+Account Number: 1003
+Customer Name: Customer 3
+Balance: $1000.0
+
+2. Static Variables and Methods Example Output:
+
+After changing the college using a static method:
+
+101 John ABC University
+102 Jane ABC University
+
+3. Inner Classes Example Output:
+
+Demonstrating message retrieval from the inner class:
+
+Message from Inner class: Hello from the Outer Class!
+
+4. Method and Constructor Overloading Example Output:
+
+Demonstrating constructor and method overloading:
+
+Default Constructor
+Parameterized Constructor with int: 100
+Integer: 42
+String: Overloading
+
+5. Single Inheritance Example Using Box Output:
+
+For a box with given dimensions and weight:
+
+Volume of the box: 3000.0
+Weight of the box: 25.5
+
