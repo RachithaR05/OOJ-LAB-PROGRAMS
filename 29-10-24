@@ -1,0 +1,240 @@
+1. Develop a Java program to create an abstract class named Shape that contains two integers
+and an empty method named printArea( ). Provide three classes named Rectangle, Triangle
+and Circle such that each one of the classes extends the class Shape. Each one of the classes
+contain only the method printArea( ) that prints the area of the given shape.
+
+
+abstract class Shape {
+    int dimension1;
+    int dimension2;
+
+    abstract void printArea();
+}
+
+class Rectangle extends Shape {
+    Rectangle(int width, int height) {
+        this.dimension1 = width;
+        this.dimension2 = height;
+    }
+
+    @Override
+    void printArea() {
+        double area = dimension1 * dimension2;
+        System.out.println("Area of Rectangle: " + area);
+    }
+}
+
+class Triangle extends Shape {
+    Triangle(int base, int height) {
+        this.dimension1 = base;
+        this.dimension2 = height;
+    }
+
+    @Override
+    void printArea() {
+        double area = 0.5 * dimension1 * dimension2;
+        System.out.println("Area of Triangle: " + area);
+    }
+}
+
+class Circle extends Shape {
+    Circle(int radius) {
+        this.dimension1 = radius;
+    }
+
+    @Override
+    void printArea() {
+        double area = Math.PI * dimension1 * dimension1;
+        System.out.println("Area of Circle: " + area);
+    }
+}
+
+public class ShapeTest {
+    public static void main(String[] args) {
+        Shape rectangle = new Rectangle(5, 10);
+        Shape triangle = new Triangle(5, 10);
+        Shape circle = new Circle(7);
+
+        rectangle.printArea();
+        triangle.printArea();
+        circle.printArea();
+    }
+}
+OUTPUT:
+Area of Rectangle: 50.0
+Area of Triangle: 25.0
+Area of Circle: 153.93804002589985
+
+2. Practice programs on Generics on classes and methods separately.
+public class GenericMethodTest {
+    public static <T> void printArray(T[] array) {
+        for (T element : array) {
+            System.out.print(element + " ");
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        Integer[] intArray = {1, 2, 3, 4, 5};
+        String[] strArray = {"A", "B", "C"};
+
+        printArray(intArray);
+        printArray(strArray);
+    }
+}
+OUTPUT:
+java -cp /tmp/2wqE1e2KCl/GenericMethodTest
+1 2 3 4 5 
+A B C 
+
+=== Code Execution Successful ===
+class Box<T> {
+    private T item;
+
+    public void setItem(T item) {
+        this.item = item;
+    }
+
+    public T getItem() {
+        return item;
+    }
+}
+
+public class GenericClassTest {
+    public static void main(String[] args) {
+        Box<String> stringBox = new Box<>();
+        stringBox.setItem("Hello Generics");
+        System.out.println(stringBox.getItem());
+
+        Box<Integer> intBox = new Box<>();
+        intBox.setItem(123);
+        System.out.println(intBox.getItem());
+    }
+}
+OUTPUT:
+java -cp /tmp/cwzLOQMdOH/GenericClassTest
+Hello Generics
+123
+
+=== Code Execution Successful ===
+
+3. Develop a Java program to create a class Bank that maintains two kinds of account for its
+customers, one called savings account and the other current account. The savings account
+provides compound interest and withdrawal facilities but no cheque book facility. The current
+account provides cheque book facility but no interest. Current account holders should also
+maintain a minimum balance and if the balance falls below this level, a service charge is
+imposed.
+Create a class Account that stores customer name, account number and type of account. From
+this derive the classes Cur-acct and Sav-acct to make them more specific to their
+requirements. Include the necessary methods in order to achieve the following tasks:
+a) Accept deposit from customer and update the balance.
+b) Display the balance.
+c) Compute and deposit interest
+d) Permit withdrawal and update the balance
+Check for the minimum balance, impose penalty if necessary and update the balance.
+
+
+
+abstract class Account {
+    protected String customerName;
+    protected String accountNumber;
+    protected double balance;
+
+    public Account(String customerName, String accountNumber) {
+        this.customerName = customerName;
+        this.accountNumber = accountNumber;
+        this.balance = 0.0;
+    }
+
+    public void deposit(double amount) {
+        balance += amount;
+        System.out.println("Deposited: " + amount);
+    }
+
+    public void displayBalance() {
+        System.out.println("Balance: " + balance);
+    }
+
+    public abstract void withdraw(double amount);
+}
+
+class SavAcct extends Account {
+    private double interestRate;
+
+    public SavAcct(String customerName, String accountNumber, double interestRate) {
+        super(customerName, accountNumber);
+        this.interestRate = interestRate;
+    }
+
+    public void computeInterest() {
+        double interest = balance * interestRate / 100;
+        deposit(interest);
+        System.out.println("Interest added: " + interest);
+    }
+
+    @Override
+    public void withdraw(double amount) {
+        if (amount <= balance) {
+            balance -= amount;
+            System.out.println("Withdrawn: " + amount);
+        } else {
+            System.out.println("Insufficient balance.");
+        }
+    }
+}
+
+class CurAcct extends Account {
+    private static final double MIN_BALANCE = 1000.0;
+    private static final double SERVICE_CHARGE = 50.0;
+
+    public CurAcct(String customerName, String accountNumber) {
+        super(customerName, accountNumber);
+    }
+
+    @Override
+    public void withdraw(double amount) {
+        if (balance - amount < MIN_BALANCE) {
+            System.out.println("Withdrawal would drop balance below minimum. Imposing service charge.");
+            balance -= SERVICE_CHARGE;
+            System.out.println("Service charge imposed: " + SERVICE_CHARGE);
+        } else {
+            balance -= amount;
+            System.out.println("Withdrawn: " + amount);
+        }
+    }
+}
+
+public class BankSystem {
+    public static void main(String[] args) {
+        SavAcct savings = new SavAcct("Alice", "S123", 5);
+        savings.deposit(1000);
+        savings.computeInterest();
+        savings.withdraw(200);
+        savings.displayBalance();
+
+        CurAcct current = new CurAcct("Bob", "C456");
+        current.deposit(1200);
+        current.withdraw(250);
+        current.withdraw(1000);  // This should impose a service charge
+        current.displayBalance();
+    }
+}
+
+
+
+
+OUTPUT:
+java -cp /tmp/VmwjMnw6rZ/BankSystem
+Deposited: 1000.0
+Deposited: 50.0
+Interest added: 50.0
+Withdrawn: 200.0
+Balance: 850.0
+Deposited: 1200.0
+Withdrawal would drop balance below minimum. Imposing service charge.
+Service charge imposed: 50.0
+Withdrawal would drop balance below minimum. Imposing service charge.
+Service charge imposed: 50.0
+Balance: 1100.0
+
+=== Code Execution Successful ===
