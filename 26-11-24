@@ -1,0 +1,395 @@
+2. Create a package CIE which has two classes- Student and Internals. The class Student has
+members like usn, name, sem. The class Internals has an array that stores the internal marks
+scored in five courses of the current semester of the student. Create another package SEE
+which has the class External which is a derived class of Student. This class has an array that
+stores the SEE marks scored in five courses of the current semester of the student. Import the
+two packages in a file that declares the final marks of n students in all five courses.
+package CIE;
+
+public class Student {
+    String usn;
+    String name;
+    int sem;
+
+    // Constructor to initialize Student data
+    public Student(String usn, String name, int sem) {
+        this.usn = usn;
+        this.name = name;
+        this.sem = sem;
+    }
+}
+
+class Internals {
+    int[] internalMarks = new int[5];  // Array to store internal marks for 5 courses
+
+    // Method to set internal marks
+    public void setMarks(int[] marks) {
+        if (marks.length == 5) {
+            this.internalMarks = marks;
+        } else {
+            System.out.println("Marks must be for 5 courses.");
+        }
+    }
+
+    // Method to calculate and return total internal marks
+    public int getTotalInternalMarks() {
+        int total = 0;
+        for (int mark : internalMarks) {
+            total += mark;
+        }
+        return total;
+    }
+}
+package SEE;
+
+import CIE.Student;  // Importing the Student class from CIE package
+
+public class External extends Student {
+    int[] externalMarks = new int[5];  // Array to store external marks for 5 courses
+
+    // Constructor to initialize External class
+    public External(String usn, String name, int sem, int[] externalMarks) {
+        super(usn, name, sem);
+        this.externalMarks = externalMarks;
+    }
+
+    // Method to calculate and return total external marks
+    public int getTotalExternalMarks() {
+        int total = 0;
+        for (int mark : externalMarks) {
+            total += mark;
+        }
+        return total;
+    }
+
+    // Method to get the final marks (internal + external)
+    public int getFinalMarks(int totalInternalMarks) {
+        return totalInternalMarks + getTotalExternalMarks();
+    }
+}
+import CIE.*;
+import SEE.*;
+
+public class FinalMarks {
+    public static void main(String[] args) {
+        // Creating an instance of Student and Internals
+        Student student1 = new Student("1USN", "John", 5);
+        Internals internals1 = new Internals();
+        internals1.setMarks(new int[]{80, 75, 70, 85, 90});  // Example internal marks
+
+        // Creating an instance of External
+        External external1 = new External("1USN", "John", 5, new int[]{60, 65, 70, 75, 80});  // Example external marks
+
+        // Calculating total internal and external marks
+        int totalInternalMarks = internals1.getTotalInternalMarks();
+        int totalExternalMarks = external1.getTotalExternalMarks();
+        int finalMarks = external1.getFinalMarks(totalInternalMarks);
+
+        // Displaying the results
+        System.out.println("Student Name: " + student1.name);
+        System.out.println("Internal Marks Total: " + totalInternalMarks);
+        System.out.println("External Marks Total: " + totalExternalMarks);
+        System.out.println("Final Marks: " + finalMarks);
+    }
+}
+Student Name: John
+Internal Marks Total: 400
+External Marks Total: 350
+Final Marks: 750
+
+
+3. Demonstrate Fixed and Dynamic Stack using Interfaces
+interface SimpleStack {
+    void push(int item);
+    int pop();
+    boolean isEmpty();
+}
+
+class FixedStack implements SimpleStack {
+    private int[] stack;
+    private int top;
+
+    public FixedStack(int size) {
+        stack = new int[size];
+        top = -1;
+    }
+
+    @Override
+    public void push(int item) {
+        if (top < stack.length - 1) {
+            stack[++top] = item;
+            System.out.println("Pushed " + item);
+        } else {
+            System.out.println("Stack Overflow!");
+        }
+    }
+
+    @Override
+    public int pop() {
+        if (top >= 0) {
+            return stack[top--];
+        } else {
+            System.out.println("Stack Underflow!");
+            return -1;
+        }
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return top == -1;
+    }
+}
+class DynamicStack implements SimpleStack {
+    private int[] stack;
+    private int top;
+
+    public DynamicStack(int size) {
+        stack = new int[size];
+        top = -1;
+    }
+
+    @Override
+    public void push(int item) {
+        if (top == stack.length - 1) {
+            // Double the size of the stack if it's full
+            int[] newStack = new int[stack.length * 2];
+            System.arraycopy(stack, 0, newStack, 0, stack.length);
+            stack = newStack;
+            System.out.println("Stack resized.");
+        }
+        stack[++top] = item;
+        System.out.println("Pushed " + item);
+    }
+
+    @Override
+    public int pop() {
+        if (top >= 0) {
+            return stack[top--];
+        } else {
+            System.out.println("Stack Underflow!");
+            return -1;
+        }
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return top == -1;
+    }
+}
+public class StackDemo {
+    public static void main(String[] args) {
+        SimpleStack fixedStack = new FixedStack(3);  // Fixed stack with size 3
+        fixedStack.push(10);
+        fixedStack.push(20);
+        fixedStack.push(30);
+        fixedStack.push(40);  // This will show "Stack Overflow!"
+
+        System.out.println("Popped: " + fixedStack.pop());
+
+        SimpleStack dynamicStack = new DynamicStack(3);  // Dynamic stack with size 3
+        dynamicStack.push(10);
+        dynamicStack.push(20);
+        dynamicStack.push(30);
+        dynamicStack.push(40);  // This will resize the stack
+
+        System.out.println("Popped: " + dynamicStack.pop());
+    }
+}
+Pushed 10
+Pushed 20
+Pushed 30
+Stack Overflow!
+Popped: 30
+Pushed 10
+Pushed 20
+Pushed 30
+Stack resized.
+Pushed 40
+Popped: 40
+
+
+4. Demonstrate Fixed and Dynamic Queues using Interfaces
+interface SimpleQueue {
+    void enqueue(int item);
+    int dequeue();
+    boolean isEmpty();
+}
+
+class FixedQueue implements SimpleQueue {
+    private int[] queue;
+    private int front;
+    private int rear;
+
+    public FixedQueue(int size) {
+        queue = new int[size];
+        front = -1;
+        rear = -1;
+    }
+
+    @Override
+    public void enqueue(int item) {
+        if (rear == queue.length - 1) {
+            System.out.println("Queue Overflow!");
+        } else {
+            if (front == -1) front = 0;
+            queue[++rear] = item;
+            System.out.println("Enqueued " + item);
+        }
+    }
+
+    @Override
+    public int dequeue() {
+        if (front == -1 || front > rear) {
+            System.out.println("Queue Underflow!");
+            return -1;
+        } else {
+            return queue[front++];
+        }
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return front == -1 || front > rear;
+    }
+}
+class DynamicQueue implements SimpleQueue {
+    private int[] queue;
+    private int front;
+    private int rear;
+
+    public DynamicQueue(int size) {
+        queue = new int[size];
+        front = -1;
+        rear = -1;
+    }
+
+    @Override
+    public void enqueue(int item) {
+        if (rear == queue.length - 1) {
+            // Double the size of the queue if it's full
+            int[] newQueue = new int[queue.length * 2];
+            System.arraycopy(queue, 0, newQueue, 0, queue.length);
+            queue = newQueue;
+            System.out.println("Queue resized.");
+        }
+        if (front == -1) front = 0;
+        queue[++rear] = item;
+        System.out.println("Enqueued " + item);
+    }
+
+    @Override
+    public int dequeue() {
+        if (front == -1 || front > rear) {
+            System.out.println("Queue Underflow!");
+            return -1;
+        } else {
+            return queue[front++];
+        }
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return front == -1 || front > rear;
+    }
+}
+public class QueueDemo {
+    public static void main(String[] args) {
+        SimpleQueue fixedQueue = new FixedQueue(3);
+        fixedQueue.enqueue(10);
+        fixedQueue.enqueue(20);
+        fixedQueue.enqueue(30);
+        fixedQueue.enqueue(40);  // This will show "Queue Overflow!"
+
+        System.out.println("Dequeued: " + fixedQueue.dequeue());
+
+        SimpleQueue dynamicQueue = new DynamicQueue(3);
+        dynamicQueue.enqueue(10);
+        dynamicQueue.enqueue(20);
+        dynamicQueue.enqueue(30);
+        dynamicQueue.enqueue(40);  // This will resize the queue
+
+        System.out.println("Dequeued: " + dynamicQueue.dequeue());
+    }
+}
+Enqueued 10
+Enqueued 20
+Enqueued 30
+Queue Overflow!
+Dequeued: 10
+Enqueued 10
+Enqueued 20
+Enqueued 30
+Queue resized.
+Enqueued 40
+Dequeued: 10
+
+5. MyDataStructure implements both the SimpleStack and SimpleQueue interfaces. Recall
+that a class can implement more than one Interface. NOTE: Demonstrate Stack and Queues.
+
+class MyDataStructure implements SimpleStack, SimpleQueue {
+    private int[] stack;
+    private int[] queue;
+    private int top;
+    private int front;
+    private int rear;
+
+    public MyDataStructure(int size) {
+        stack = new int[size];
+        queue = new int[size];
+        top = -1;
+        front = -1;
+        rear = -1;
+    }
+
+    // Stack Methods
+    @Override
+    public void push(int item) {
+        if (top == stack.length - 1) {
+            System.out.println("Stack Overflow!");
+        } else {
+            stack[++top] = item;
+            System.out.println("Pushed " + item);
+        }
+    }
+
+    @Override
+    public int pop() {
+        if (top >= 0) {
+            return stack[top--];
+        } else {
+            System.out.println("Stack Underflow!");
+            return -1;
+        }
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return top == -1;
+    }
+
+    // Queue Methods
+    @Override
+    public void enqueue(int item) {
+        if (rear == queue.length - 1) {
+            System.out.println("Queue Overflow!");
+        } else {
+            if (front == -1) front = 0;
+            queue[++rear] = item;
+            System.out.println("Enqueued " + item);
+        }
+    }
+
+    @Override
+    public int dequeue() {
+        if (front == -1 || front > rear) {
+            System.out.println("Queue Underflow!");
+            return -1;
+        } else {
+            return queue[front++];
+        }
+    }
+}
+Pushed 10
+Enqueued 20
+Dequeued: 20
+Popped: 10
