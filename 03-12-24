@@ -1,0 +1,222 @@
+1. Write a program that demonstrates handling of exceptions in inheritance tree. Create a base
+class called “Father” and derived class called “Son” which extends the base class. In Father
+class, implement a constructor which takes the age and throws the exception WrongAge( )
+when the input age&lt;0. In Son class, implement a constructor that uses both father and son’s
+age and throws an exception if son’s age is &gt;=father’s age.
+
+// Custom exception class
+class WrongAge extends Exception {
+    public WrongAge(String message) {
+        super(message);
+    }
+}
+
+// Base class Father
+class Father {
+    int age;
+
+    // Constructor of Father class
+    public Father(int age) throws WrongAge {
+        if (age < 0) {
+            throw new WrongAge("Father's age cannot be negative!");
+        }
+        this.age = age;
+    }
+}
+
+// Derived class Son
+class Son extends Father {
+    int sonAge;
+
+    // Constructor of Son class
+    public Son(int fatherAge, int sonAge) throws WrongAge {
+        super(fatherAge);  // Calls the Father class constructor
+        if (sonAge >= fatherAge) {
+            throw new WrongAge("Son's age cannot be greater than or equal to father's age!");
+        }
+        this.sonAge = sonAge;
+    }
+}
+
+// Main class to test exception handling
+public class FamilyAgeTest {
+    public static void main(String[] args) {
+        try {
+            // Creating an object of Son class with valid ages
+            Son son = new Son(40, 20);  // Father is 40, Son is 20
+            System.out.println("Father's age: " + son.age);
+            System.out.println("Son's age: " + son.sonAge);
+        } catch (WrongAge e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+
+        try {
+            // Creating an object of Son class with invalid ages (son's age >= father's age)
+            Son son = new Son(30, 35);  // Father is 30, Son is 35
+            System.out.println("Father's age: " + son.age);
+            System.out.println("Son's age: " + son.sonAge);
+        } catch (WrongAge e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+
+        try {
+            // Creating an object of Father class with invalid age
+            Father father = new Father(-5);  // Negative age
+            System.out.println("Father's age: " + father.age);
+        } catch (WrongAge e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
+Father's age: 40
+Son's age: 20
+Error: Son's age cannot be greater than or equal to father's age!
+Error: Father's age cannot be negative!
+2. Design a program where students do the course registration, Input is USN, Name, Courses
+etc.
+
+import java.util.Scanner;
+
+// Class to store student registration details
+class Student {
+    String usn;
+    String name;
+    String[] courses;
+
+    // Constructor to initialize the student details
+    public Student(String usn, String name, String[] courses) {
+        this.usn = usn;
+        this.name = name;
+        this.courses = courses;
+    }
+
+    // Method to display student details
+    public void display() {
+        System.out.println("Student USN: " + usn);
+        System.out.println("Student Name: " + name);
+        System.out.print("Courses: ");
+        for (String course : courses) {
+            System.out.print(course + " ");
+        }
+        System.out.println();
+    }
+}
+
+public class CourseRegistration {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Input for student details
+        System.out.println("Enter Student USN: ");
+        String usn = sc.nextLine();
+
+        System.out.println("Enter Student Name: ");
+        String name = sc.nextLine();
+
+        System.out.println("Enter number of courses to register: ");
+        int numCourses = sc.nextInt();
+        sc.nextLine(); // Consume the newline character after integer input
+
+        String[] courses = new String[numCourses];
+        System.out.println("Enter Course Names:");
+        for (int i = 0; i < numCourses; i++) {
+            courses[i] = sc.nextLine();
+        }
+
+        // Create student object
+        Student student = new Student(usn, name, courses);
+
+        // Display student registration details
+        System.out.println("\nStudent Registration Successful!");
+        student.display();
+
+        sc.close();
+    }
+}
+Enter Student USN: 
+1RV21CS001
+Enter Student Name: 
+John Doe
+Enter number of courses to register: 
+3
+Enter Course Names:
+Java Programming
+Data Structures
+Database Systems
+
+Student Registration Successful!
+Student USN: 1RV21CS001
+Student Name: John Doe
+Courses: Java Programming Data Structures Database Systems 
+3. You are given a piece of Java code. You have to complete the code by writing down the handlers for exceptions thrown by the code. The exceptions the code may throw along with the handler message are listed below:
+
+Division by zero: Print "Invalid division".
+String parsed to a numeric variable : Print "Format mismatch".
+Accessing an invalid index in string : Print "Index is invalid".
+Accessing an invalid index in array : Print "Array index is invalid".
+
+MyException : This is a user defined Exception which you need to create. It takes a parameter 
+. When an exception of this class is encountered, the handler should print "MyException[param]", here 
+ is the parameter passed to the exception class.
+
+Exceptions other than mentioned above : Any other exception except the above ones fall in this category. Print "Exception encountered".
+
+Finally, after the exception is handled, print "Exception Handling Completed".
+
+// Custom exception class for MyException
+class MyException extends Exception {
+    private int param;
+
+    // Constructor that accepts an integer parameter
+    public MyException(int param) {
+        this.param = param;
+    }
+
+    // Method to get the exception message
+    public String getMessage() {
+        return "MyException[" + param + "]";
+    }
+}
+
+public class ExceptionHandler {
+
+    public static void main(String[] args) {
+        try {
+            // Sample code with potential exceptions
+
+            // Division by zero exception
+            int x = 10, y = 0;
+            int result = x / y; // This will throw ArithmeticException
+
+            // Format mismatch exception
+            String numStr = "123a";  // Invalid numeric string
+            int num = Integer.parseInt(numStr); // This will throw NumberFormatException
+
+            // Index out of bounds for string
+            String str = "hello";
+            char ch = str.charAt(10);  // This will throw StringIndexOutOfBoundsException
+
+            // Index out of bounds for array
+            int[] arr = new int[5];
+            int element = arr[10];  // This will throw ArrayIndexOutOfBoundsException
+
+            // Throwing user-defined exception
+            throw new MyException(5);  // This will throw MyException
+
+        } catch (ArithmeticException e) {
+            System.out.println("Invalid division");
+        } catch (NumberFormatException e) {
+            System.out.println("Format mismatch");
+        } catch (StringIndexOutOfBoundsException e) {
+            System.out.println("Index is invalid");
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Array index is invalid");
+        } catch (MyException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Exception encountered");
+        } finally {
+            System.out.println("Exception Handling Completed");
+        }
+    }
+}
